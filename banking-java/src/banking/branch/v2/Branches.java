@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Branches {
+public final class Branches {
    // Key: Branch code, Value: Branch instance
    private static final Map<Integer, Branch> branches = new HashMap<>();
 
