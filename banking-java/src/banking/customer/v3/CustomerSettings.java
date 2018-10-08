@@ -1,4 +1,4 @@
-package banking.branch.v3;
+package banking.customer.v3;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,11 +9,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-final class BranchSettings {
+final class CustomerSettings {
    private static final Properties settings;
 
-   private static final String PROP_DIR  = "data/branch";
-   private static final String PROP_FILE = "branch.properties";
+   private static final String PROP_DIR  = "data/customer";
+   private static final String PROP_FILE = "customer.properties";
    private static final Charset PROP_CHARSET = StandardCharsets.UTF_8;
    private static final String PROP_FILE_NOT_FOUND = "%s not found%n";
 
