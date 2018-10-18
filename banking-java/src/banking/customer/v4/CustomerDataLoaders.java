@@ -24,26 +24,24 @@ final class CustomerDataLoaders {
             Map<CustomerNumber, Customer> map = new HashMap<>();
 
             try ( 
-                  Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
-                  Statement stmt = conn.createStatement();
-                  )
-            {
-               // "CREATE TABLE customer (cnumhigh INTEGER, cnumlow INTEGER, bcode INTEGER)"
+               Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
+            ){
+               Statement stmt = conn.createStatement();
                ResultSet rs = stmt.executeQuery("SELECT * FROM customer");
                while(rs.next()) {
                   int high = rs.getInt(1);
                   int low  = rs.getInt(2);
                   CustomerNumber n = CustomerNumber.of(high, low);
 
-                  Optional<String> sBcode = Optional.ofNullable(rs.getString(3));
-                  Optional<Branch> b = sBcode.map(s -> {
-                     try {
-                        int bcode = Integer.parseInt(s);
-                        return mapBranches.get(bcode);
-                     } catch(NumberFormatException e) {
-                        return null;
-                     }
-                  });
+                  Optional<Branch> b = Optional.ofNullable(rs.getString(3))
+                     .flatMap(strBcode -> {
+                        try {
+                           int intBcode = Integer.parseInt(strBcode);
+                           return Optional.of(mapBranches.get(intBcode));
+                        } catch(NumberFormatException e) {
+                           return Optional.empty();
+                        }
+                     });
 
                   map.put(n, PrototypeCustomer.of(n, b));
                }
