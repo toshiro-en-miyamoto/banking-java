@@ -20,8 +20,8 @@ final class BranchDataLoaders {
             try (
                Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
             ){
-               Statement stmt = conn.createStatement();
-               ResultSet rs = stmt.executeQuery("SELECT bcode, name, pcode FROM branch");
+               Statement select = conn.createStatement();
+               ResultSet rs = select.executeQuery("SELECT bcode, name, pcode FROM branch");
                while(rs.next()) {
                   int bcode = rs.getInt("bcode");
                   String name = rs.getString("name");

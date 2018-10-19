@@ -18,12 +18,12 @@ final class CreateBranchTable {
       try (
             Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
          ){
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate("DROP TABLE IF EXISTS branch");
-            stmt.executeUpdate("CREATE TABLE branch (bcode INTEGER, name STRING, pcode STRING)");
-            stmt.executeUpdate("INSERT INTO branch VALUES(301,'札幌支店','060-0001')");
-            stmt.executeUpdate("INSERT INTO branch VALUES(704,'北九州支店','802-0006')");
-            stmt.executeUpdate("INSERT INTO branch VALUES(701,'福岡支店','812-0011')");
+            Statement update = conn.createStatement();
+            update.executeUpdate("DROP TABLE IF EXISTS branch");
+            update.executeUpdate("CREATE TABLE branch (bcode INTEGER, name STRING, pcode STRING)");
+            update.executeUpdate("INSERT INTO branch VALUES(301,'札幌支店','060-0001')");
+            update.executeUpdate("INSERT INTO branch VALUES(704,'北九州支店','802-0006')");
+            update.executeUpdate("INSERT INTO branch VALUES(701,'福岡支店','812-0011')");
          } catch (SQLException e) {
             System.out.printf("%s (%s:%d)%n", e.getMessage(), e.getSQLState(), e.getErrorCode());
          }
@@ -33,8 +33,8 @@ final class CreateBranchTable {
       try (
             Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
          ){
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT bcode, name, pcode FROM branch");
+            Statement select = conn.createStatement();
+            ResultSet rs = select.executeQuery("SELECT bcode, name, pcode FROM branch");
             while(rs.next()) {
                int bcode = rs.getInt("bcode");
                String name = rs.getString("name");
