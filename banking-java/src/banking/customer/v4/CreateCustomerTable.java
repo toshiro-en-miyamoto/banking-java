@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Optional;
 
 final class CreateCustomerTable {
 
@@ -17,53 +16,53 @@ final class CreateCustomerTable {
          conn.setAutoCommit(false);
 
          try {
-            Statement stmt = conn.createStatement();
-            stmt.executeUpdate("DROP TABLE IF EXISTS customer");
-            stmt.executeUpdate("CREATE TABLE customer (upper INTEGER, lower INTEGER, bcode INTEGER)");
+            Statement createTable = conn.createStatement();
+            createTable.executeUpdate("drop table if exists Customer");
+            createTable.executeUpdate("create table Customer (CustomerNo1 integer, CustomerNo2 integer, BranchCode integer)");
 
-            final String SQL = "INSERT INTO customer VALUES(?, ?, ?)";
-            PreparedStatement insert = conn.prepareStatement(SQL);
+            PreparedStatement insert =
+                  conn.prepareStatement("insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (?, ?, ?)");
 
-            // INSERT INTO customer VALUES(59082, 90388, 301)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (59082, 90388, 301)
             insert.setInt(1, 59082);
             insert.setInt(2, 90388);
             insert.setInt(3, 301);
             insert.executeUpdate();
 
-            // INSERT INTO customer VALUES(40478, 81098, 704)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (40478, 81098, 704)
             insert.setInt(1, 40478);
             insert.setInt(2, 81098);
             insert.setInt(3, 704);
             insert.executeUpdate();
 
-            // INSERT INTO customer VALUES(42219, 82253, 704)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (42219, 82253, 704)
             insert.setInt(1, 42219);
             insert.setInt(2, 82253);
             insert.executeUpdate();
 
-            // INSERT INTO customer VALUES(90944, 27526, 701)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (90944, 27526, 701)
             insert.setInt(1, 90944);
             insert.setInt(2, 27526);
             insert.setInt(3, 701);
             insert.executeUpdate();
 
-            // INSERT INTO customer VALUES(13700, 46678, 701)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (13700, 46678, 701)
             insert.setInt(1, 13700);
             insert.setInt(2, 46678);
             insert.executeUpdate();
 
-            // INSERT INTO customer VALUES(99155, 51171, 701)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (99155, 51171, 701)
             insert.setInt(1, 99155);
             insert.setInt(2, 51171);
             insert.executeUpdate();
 
-            // INSERT INTO customer VALUES(18827, 78489, NULL)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (18827, 78489, null)
             insert.setInt(1, 18827);
             insert.setInt(2, 78489);
             insert.setNull(3, java.sql.Types.INTEGER);
             insert.executeUpdate();
 
-            // INSERT INTO customer VALUES(63855, 36217, NULL)
+            // insert into Customer (CustomerNo1, CustomerNo2, BranchCode) values (63855, 36217, null)
             insert.setInt(1, 63855);
             insert.setInt(2, 36217);
             insert.setNull(3, java.sql.Types.INTEGER);
@@ -71,6 +70,7 @@ final class CreateCustomerTable {
 
             conn.commit();
          } catch (SQLException e) {
+            System.out.printf("%s (%s:%d)%n", e.getMessage(), e.getSQLState(), e.getErrorCode());
             conn.rollback();
          } finally {
             conn.setAutoCommit(true);
@@ -84,20 +84,17 @@ final class CreateCustomerTable {
       try (
          Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
       ){
-         Statement select = conn.createStatement();
-         ResultSet rs = select.executeQuery("SELECT * FROM customer");
+         Statement query = conn.createStatement();
+         ResultSet rs = query.executeQuery("select CustomerNo1, CustomerNo2, BranchCode from Customer");
          while(rs.next()) {
-            int upper = rs.getInt(1);
-            int lower = rs.getInt(2);
+            int cno1 = rs.getInt(1);
+            int cno2 = rs.getInt(2);
 
-            Optional.ofNullable(rs.getString(3))
-               .ifPresentOrElse(
-                  strBcode -> {
-                     System.out.printf("%d-%d: %s%n", upper, lower, strBcode);
-                  }, () -> {
-                     System.out.printf("%d-%d: ***%n", upper, lower);
-                  }
-            );
+            int iBcode = rs.getInt(3);
+            if(rs.wasNull())
+               System.out.printf("%d-%d: ***%n", cno1, cno2);
+            else
+               System.out.printf("%d-%d: %s%n", cno1, cno2, iBcode);
          }
       } catch (SQLException e) {
          System.out.printf("%s (%s:%d)%n", e.getMessage(), e.getSQLState(), e.getErrorCode());

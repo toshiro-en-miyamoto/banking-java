@@ -26,14 +26,14 @@ final class CustomerDataLoaders {
             try ( 
                Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
             ){
-               Statement select = conn.createStatement();
-               ResultSet rs = select.executeQuery("SELECT * FROM customer");
+               Statement query = conn.createStatement();
+               ResultSet rs = query.executeQuery("select CustomerNo1, CustomerNo2, BranchCode from Customer");
                while(rs.next()) {
-                  int upper = rs.getInt(1);
-                  int lower = rs.getInt(2);
-                  CustomerNumber n = CustomerNumber.of(upper, lower);
+                  int cno1 = rs.getInt("CustomerNo1");
+                  int cno2 = rs.getInt("CustomerNo2");
+                  CustomerNumber n = CustomerNumber.of(cno1, cno2);
 
-                  Optional<Branch> b = Optional.ofNullable(rs.getString(3))
+                  Optional<Branch> b = Optional.ofNullable(rs.getString("BranchCode"))
                      .flatMap(strBcode -> {
                         try {
                            int intBcode = Integer.parseInt(strBcode);

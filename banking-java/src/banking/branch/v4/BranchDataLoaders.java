@@ -20,13 +20,13 @@ final class BranchDataLoaders {
             try (
                Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
             ){
-               Statement select = conn.createStatement();
-               ResultSet rs = select.executeQuery("SELECT bcode, name, pcode FROM branch");
+               Statement query = conn.createStatement();
+               ResultSet rs = query.executeQuery("select BranchCode, BranchName, PostalCode from Branch");
                while(rs.next()) {
-                  int bcode = rs.getInt("bcode");
-                  String name = rs.getString("name");
-                  String pcode = rs.getString("pcode");
-                  map.put(bcode, PrototypeBranch.of(bcode,name,pcode));
+                  int bcode = rs.getInt(1);
+                  String name = rs.getString(2);
+                  String pcode = rs.getString(3);
+                  map.put(bcode, PrototypeBranch.of(bcode, name, pcode));
                }
             } catch (SQLException e) {
                System.err.printf("%s (%s:%d)%n", e.getMessage(), e.getSQLState(), e.getErrorCode());

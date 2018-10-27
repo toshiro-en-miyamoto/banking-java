@@ -7,23 +7,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 final class CreateBranchTable {
-   // Download JDBC driver from 'https://bitbucket.org/xerial/sqlite-jdbc/downloads/'.
-   // The latest driver as of 2018-10-15 is sqlite-jdbc-3.23.1.jar (2018-05-29, 6.4MB)
-   // With Eclipse, right click on a Java project, select Build Path → Add External Archives...,
-   // then the driver jar file will appear in Referenced Libraries of the project.
-
-   // Running this class will create the file banking.db in the working directory (user.dir).
 
    private static void createTable() {
       try (
             Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
          ){
             Statement update = conn.createStatement();
-            update.executeUpdate("DROP TABLE IF EXISTS branch");
-            update.executeUpdate("CREATE TABLE branch (bcode INTEGER, name STRING, pcode STRING)");
-            update.executeUpdate("INSERT INTO branch VALUES(301,'札幌支店','060-0001')");
-            update.executeUpdate("INSERT INTO branch VALUES(704,'北九州支店','802-0006')");
-            update.executeUpdate("INSERT INTO branch VALUES(701,'福岡支店','812-0011')");
+            update.executeUpdate("drop table if exists Branch");
+            update.executeUpdate("create table Branch (BranchCode integer, BranchName char(32), PostalCode char(8))");
+            update.executeUpdate("insert into Branch (BranchCode, BranchName, PostalCode) values(301,'札幌支店','060-0001')");
+            update.executeUpdate("insert into Branch (BranchCode, BranchName, PostalCode) values(704,'北九州支店','802-0006')");
+            update.executeUpdate("insert into Branch (BranchCode, BranchName, PostalCode) values(701,'福岡支店','812-0011')");
          } catch (SQLException e) {
             System.out.printf("%s (%s:%d)%n", e.getMessage(), e.getSQLState(), e.getErrorCode());
          }
@@ -33,12 +27,12 @@ final class CreateBranchTable {
       try (
             Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
          ){
-            Statement select = conn.createStatement();
-            ResultSet rs = select.executeQuery("SELECT bcode, name, pcode FROM branch");
+            Statement query = conn.createStatement();
+            ResultSet rs = query.executeQuery("select BranchCode, BranchName, PostalCode from Branch");
             while(rs.next()) {
-               int bcode = rs.getInt("bcode");
-               String name = rs.getString("name");
-               String pcode = rs.getString("pcode");
+               int bcode = rs.getInt("BranchCode");
+               String name = rs.getString("BranchName");
+               String pcode = rs.getString("PostalCode");
                System.out.printf("%d: %s, %s%n", bcode,  name, pcode);
             }
          } catch (SQLException e) {
