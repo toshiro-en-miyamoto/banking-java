@@ -11,8 +11,8 @@ final class CreateBranchTable {
    private static void createTable() {
       try (
             Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
-         ){
             Statement update = conn.createStatement();
+         ){
             update.executeUpdate("drop table if exists Branch");
             update.executeUpdate("create table Branch (BranchCode integer, BranchName char(32), PostalCode char(8))");
             update.executeUpdate("insert into Branch (BranchCode, BranchName, PostalCode) values(301,'札幌支店','060-0001')");
@@ -26,8 +26,8 @@ final class CreateBranchTable {
    private static void printTable() {
       try (
             Connection conn = DriverManager.getConnection("jdbc:sqlite:banking.db");
-         ){
             Statement query = conn.createStatement();
+         ){
             ResultSet rs = query.executeQuery("select BranchCode, BranchName, PostalCode from Branch");
             while(rs.next()) {
                int bcode = rs.getInt("BranchCode");
